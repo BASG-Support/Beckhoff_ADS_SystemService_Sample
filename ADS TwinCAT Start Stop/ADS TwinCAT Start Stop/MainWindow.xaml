@@ -1,0 +1,10 @@
+﻿<Window x:Class="ADS_TwinCAT_Start_Stop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ADS Start/Stop" Height="100" Width="200" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid Background="#FF999999">
+        <Button Content="TwinCAT RUN   Mode" Height="25" Margin="10,10,10,0" VerticalAlignment="Top" FontFamily="Courier New" Background="#FF74D348" Click="TwinCAT_Run_Click"/>
+        <Button Content="TwinCAT CONFIG Mode" Height="25" Margin="10,40,10,0" VerticalAlignment="Top" FontFamily="Courier New" Background="#FF579BBB" Click="TwinCAT_Config_Click"/>
+
+    </Grid>
+</Window>
