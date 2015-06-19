@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Xml.Linq;
+
 using TwinCAT.Ads;
 
 namespace ADS_TwinCAT_Start_Stop
@@ -35,7 +37,8 @@ namespace ADS_TwinCAT_Start_Stop
         {
             try
             {
-                TcClient.Connect((int)AmsPort.SystemService);
+                XDocument app_config = XDocument.Load("app_config.xml");
+                TcClient.Connect(app_config.Root.Attribute("address").Value, (int)AmsPort.SystemService);
             }
             catch (Exception)
             {
@@ -52,6 +55,10 @@ namespace ADS_TwinCAT_Start_Stop
             {
                 if (TcClient.IsConnected)
                 {
+                    if (TcClient.ReadState().AdsState == AdsState.Run)
+                    {
+                        ShowDialog();
+                    }
                     StateInfo TcRunMode = new StateInfo(AdsState.Reset, 1);
                     TcClient.WriteControl(TcRunMode);
                 }
@@ -71,8 +78,23 @@ namespace ADS_TwinCAT_Start_Stop
             {
                 if (TcClient.IsConnected)
                 {
-                    StateInfo TcConfigMode = new StateInfo(AdsState.Reconfig, 1);
-                    TcClient.WriteControl(TcConfigMode);
+                    if (TcClient.ReadState().AdsState == AdsState.Run)
+                    {
+                        Dialog _Popup = new Dialog();
+                        if ((bool)_Popup.ShowDialog())
+                        {
+                            if (_Popup.OptionSelected == 1)
+                            {
+                                StateInfo TcConfigMode = new StateInfo(AdsState.Reconfig, 1);
+                                TcClient.WriteControl(TcConfigMode);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        StateInfo TcConfigMode = new StateInfo(AdsState.Reconfig, 1);
+                        TcClient.WriteControl(TcConfigMode);
+                    }
                 }
             }
             catch (Exception)
@@ -93,5 +115,35 @@ namespace ADS_TwinCAT_Start_Stop
         }
 
         #endregion
+
+        #region Reconnect to the PLC.
+
+        private void Reconnect_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                bool reconnect = true;
+                if (TcClient.IsConnected)
+                {
+                    Dialog _Popup = new Dialog();
+                    if ((bool)_Popup.ShowDialog())
+                    {
+                        if (_Popup.OptionSelected == 0) reconnect = false;
+                        else TcClient.Dispose();
+                    }
+                }
+                if (reconnect)
+                {
+                    XDocument app_config = XDocument.Load("app_config.xml");
+                    TcClient.Connect(app_config.Root.Attribute("address").Value, (int)AmsPort.SystemService);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -1,0 +1,11 @@
+﻿<Window x:Class="ADS_TwinCAT_Start_Stop.Dialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dialog" Height="150" Width="200" Background="LightGray">
+    <Grid>
+        <Button Content="Yes" HorizontalAlignment="Left" Height="30" Margin="10,83,0,0" VerticalAlignment="Top" Width="80" Click="Yes_Click"/>
+        <Button Content="No" HorizontalAlignment="Left" Height="30" Margin="102,83,0,0" VerticalAlignment="Top" Width="80" Click="No_Click"/>
+        <Label x:Name="MessageArea" Content="Confirm?" HorizontalAlignment="Center" Margin="0,30,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
